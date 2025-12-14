@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+{% block title %}Reservas Inacap · Ingresar{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center" style="min-height: 80vh;">
+  <div class="col-12 col-md-8 col-lg-5">
+
+    <div class="text-center mb-4 fade-in-up">
+      <h1 class="fw-bold text-brand mb-2">Reservas Inacap</h1>
+      <p class="text-muted">Bienvenido al sistema de gestión de espacios</p>
+    </div>
+
+    <div class="card glass-panel border-0 shadow-lg fade-in-up" style="animation-delay: 0.1s;">
+      <div class="card-body p-5">
+
+        <h2 class="h4 mb-4 fw-bold text-center">Iniciar Sesión</h2>
+
+        {% if form.non_field_errors %}
+        <div class="alert alert-danger rounded-3 shadow-sm">
+          {% for e in form.non_field_errors %}{{ e }}<br>{% endfor %}
+        </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold small text-uppercase text-muted">Correo o Usuario</label>
+            {{ form.username }}
+            {% if form.username.errors %}
+            <div class="text-danger small mt-1">{{ form.username.errors|striptags }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-4">
+            <label class="form-label fw-semibold small text-uppercase text-muted">Contraseña</label>
+            <div class="input-group">
+              {{ form.password }}
+              <button class="btn btn-outline-secondary" type="button" data-toggle="password" title="Mostrar/Ocultar">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            {% if form.password.errors %}
+            <div class="text-danger small mt-1">{{ form.password.errors|striptags }}</div>
+            {% endif %}
+          </div>
+
+          <div class="d-grid gap-2 mt-5">
+            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-glow">
+              <i class="bi bi-box-arrow-in-right me-2"></i> Ingresar
+            </button>
+          </div>
+
+          <div class="d-flex justify-content-end align-items-center mt-4 pt-3 border-top">
+            {% if 'password_reset' in request.resolver_match.namespaces or True %}
+            <a class="text-decoration-none text-muted small" href="{% url 'password_reset' %}">
+              ¿Olvidaste tu contraseña?
+            </a>
+            {% endif %}
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <div class="text-center mt-4 text-muted small fade-in-up" style="animation-delay: 0.2s;">
+      &copy; {% now "Y" %} Inacap · Todos los derechos reservados
+    </div>
+
+  </div>
+</div>
+{% endblock %}

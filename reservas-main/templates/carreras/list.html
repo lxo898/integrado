@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block title %}Reservas Inacap · Carreras{% endblock %}
+{% block content %}
+
+<section class="p-4 rounded-4 mb-4 inacap-hero">
+    <div class="d-flex justify-content-between align-items-center">
+        <h1 class="h4 m-0 text-white">🎓 Carreras · Reservas Inacap</h1>
+        {% if user.is_staff %}
+        <a href="{% url 'carrera_new' %}" class="btn btn-light text-danger rounded-3">
+            <i class="bi bi-plus-circle"></i> Nueva carrera
+        </a>
+        {% endif %}
+    </div>
+</section>
+
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+        {% if object_list %}
+        <div class="table-responsive">
+            <table class="table table-hover align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Código</th>
+                        {% if user.is_staff %}
+                        <th class="text-end" style="width: 200px;">Acciones</th>
+                        {% endif %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for c in object_list %}
+                    <tr>
+                        <td class="fw-semibold">{{ c.name }}</td>
+                        <td><span class="badge text-bg-light border text-dark">{{ c.code|default:"—" }}</span></td>
+
+                        {% if user.is_staff %}
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a class="btn btn-sm btn-outline-primary" href="{% url 'carrera_edit' c.id %}">
+                                    <i class="bi bi-pencil-square"></i> Editar
+                                </a>
+                                <a class="btn btn-sm btn-outline-danger" href="{% url 'carrera_delete' c.id %}">
+                                    <i class="bi bi-trash3"></i> Eliminar
+                                </a>
+                            </div>
+                        </td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+            <div class="display-6 mb-2">🎓</div>
+            <p class="text-muted m-0">No hay carreras registradas.</p>
+            {% if user.is_staff %}
+            <div class="mt-3">
+                <a href="{% url 'carrera_new' %}" class="btn btn-danger rounded-3">
+                    <i class="bi bi-plus-circle"></i> Crear la primera
+                </a>
+            </div>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

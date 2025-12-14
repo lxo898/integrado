@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Área{% endblock %}
+{% block content %}
+<section class="p-4 rounded-4 mb-4 inacap-hero">
+    <h1 class="h3 m-0">Gestionar Área</h1>
+</section>
+<div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+            {% endif %}
+
+            <!-- Renderizado simple y seguro -->
+            {% for field in form %}
+            <div class="mb-3">
+                <label class="form-label fw-bold">{{ field.label }}</label>
+                {{ field }}
+                {% if field.help_text %}
+                <div class="form-text">{{ field.help_text }}</div>
+                {% endif %}
+                {% if field.errors %}
+                <div class="text-danger small">{{ field.errors }}</div>
+                {% endif %}
+            </div>
+            {% endfor %}
+
+            <div class="mt-4">
+                <a href="{% url 'areas_list' %}" class="btn btn-secondary">Cancelar</a>
+                <button type="submit" class="btn btn-danger">Guardar</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

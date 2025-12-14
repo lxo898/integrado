@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Reservas Inacap · Crear usuario{% endblock %}
+
+{% block content %}
+<section class="p-4 rounded-4 mb-4 inacap-hero">
+  <div class="d-flex justify-content-between align-items-center">
+    <div>
+      <h1 class="h3 m-0">Crear usuario</h1>
+      <div class="small text-white-50">El Administrador puede crear cuentas y asignarles rol</div>
+    </div>
+  </div>
+</section>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-lg-8">
+    <div class="card border-0 rounded-4 shadow-sm">
+      <div class="card-body p-4">
+
+        {% if form.non_field_errors %}
+          <div class="alert alert-danger rounded-3">
+            {% for e in form.non_field_errors %}{{ e }}<br>{% endfor %}
+          </div>
+        {% endif %}
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Nombre</label>
+              {{ form.first_name }}
+              <div class="text-danger small">{{ form.first_name.errors|striptags }}</div>
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Apellido</label>
+              {{ form.last_name }}
+              <div class="text-danger small">{{ form.last_name.errors|striptags }}</div>
+            </div>
+
+            <div class="col-md-8">
+              <label class="form-label">Correo institucional</label>
+              {{ form.email }}
+              <div class="form-text">Debe ser @inacap.cl o @inacapmail.cl</div>
+              <div class="text-danger small">{{ form.email.errors|striptags }}</div>
+            </div>
+
+            <div class="col-md-4">
+              <label class="form-label">Rol</label>
+              {{ form.role }}
+              <div class="text-danger small">{{ form.role.errors|striptags }}</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Contraseña</label>
+              <div class="input-group">
+                {{ form.password1 }}
+                <button class="btn btn-outline-secondary" type="button" data-toggle="password" title="Mostrar/Ocultar">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div class="text-danger small">{{ form.password1.errors|striptags }}</div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Confirmar contraseña</label>
+              <div class="input-group">
+                {{ form.password2 }}
+                <button class="btn btn-outline-secondary" type="button" data-toggle="password" title="Mostrar/Ocultar">
+                  <i class="bi bi-eye"></i>
+                </button>
+              </div>
+              <div class="text-danger small">{{ form.password2.errors|striptags }}</div>
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-end mt-4">
+            <button type="submit" class="btn btn-primary rounded-3">
+              <i class="bi bi-person-plus"></i> Crear usuario
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

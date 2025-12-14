@@ -1,0 +1,213 @@
+/* static/css/custom.css */
+
+/* ====== Variables & Design Tokens ====== */
+:root {
+  /* Brand Colors */
+  --brand-primary: #E2001A;       /* Inacap Red */
+  --brand-primary-dark: #B60015;
+  --brand-secondary: #1F2937;     /* Dark Gray */
+  --brand-accent: #FF5A73;        /* Lighter Red for accents */
+
+  /* Backgrounds */
+  --bg-body: #F3F4F6;
+  --bg-card: #FFFFFF;
+  --bg-glass: rgba(255, 255, 255, 0.85);
+
+  /* Text */
+  --text-main: #111827;
+  --text-muted: #6B7280;
+
+  /* UI Elements */
+  --radius-sm: 0.5rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.5rem;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-glow: 0 0 15px rgba(226, 0, 26, 0.3);
+
+  /* Transitions */
+  --transition-fast: 0.2s ease;
+  --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+[data-bs-theme="dark"] {
+  --bg-body: #111827;
+  --bg-card: #1F2937;
+  --bg-glass: rgba(31, 41, 55, 0.85);
+  --text-main: #F9FAFB;
+  --text-muted: #9CA3AF;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+}
+
+/* ====== Global Styles ====== */
+body {
+  background-color: var(--bg-body);
+  color: var(--text-main);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  transition: background-color var(--transition-smooth), color var(--transition-smooth);
+}
+
+a {
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+/* ====== Typography ====== */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  letter-spacing: -0.025em;
+  color: var(--text-main);
+}
+
+.text-brand {
+  color: var(--brand-primary) !important;
+}
+
+/* ====== Glassmorphism & Cards ====== */
+.card {
+  background: var(--bg-card);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+}
+
+.glass-panel {
+  background: var(--bg-glass);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+/* ====== Buttons ====== */
+.btn {
+  font-weight: 600;
+  padding: 0.625rem 1.25rem;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+  letter-spacing: 0.01em;
+}
+
+.btn-primary {
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary);
+  box-shadow: 0 4px 6px rgba(226, 0, 26, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: var(--brand-primary-dark);
+  border-color: var(--brand-primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 12px rgba(226, 0, 26, 0.3);
+}
+
+.btn-outline-primary {
+  color: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--brand-primary);
+  color: #fff;
+}
+
+/* ====== Navbar ====== */
+.navbar {
+  background: var(--bg-glass) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(0,0,0,0.05);
+  box-shadow: var(--shadow-sm);
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+}
+
+.navbar-brand {
+  font-weight: 800;
+  font-size: 1.25rem;
+  color: var(--brand-primary) !important;
+}
+
+.nav-link {
+  font-weight: 500;
+  color: var(--text-muted) !important;
+  border-radius: var(--radius-sm);
+  padding: 0.5rem 1rem !important;
+  transition: all var(--transition-fast);
+}
+
+.nav-link:hover, .nav-link.active {
+  color: var(--brand-primary) !important;
+  background-color: rgba(226, 0, 26, 0.05);
+}
+
+/* ====== Hero Section ====== */
+.inacap-hero {
+  background: linear-gradient(135deg, var(--brand-primary) 0%, var(--brand-primary-dark) 100%);
+  color: white;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+.inacap-hero::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background: radial-gradient(circle at top right, rgba(255,255,255,0.1), transparent 60%);
+  pointer-events: none;
+}
+
+/* ====== Forms ====== */
+.form-control, .form-select {
+  border-radius: var(--radius-sm);
+  border: 1px solid #E5E7EB;
+  padding: 0.75rem 1rem;
+  transition: border-color var(--transition-fast), box-shadow var(--transition-fast);
+  background-color: var(--bg-card);
+  color: var(--text-main);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--brand-primary);
+  box-shadow: 0 0 0 4px rgba(226, 0, 26, 0.1);
+}
+
+/* ====== Status Badges ====== */
+.badge {
+  padding: 0.5em 0.8em;
+  font-weight: 600;
+  border-radius: 2rem;
+}
+
+.bg-success { background-color: #10B981 !important; } /* Emerald */
+.bg-warning { background-color: #F59E0B !important; color: #fff !important; } /* Amber */
+.bg-danger { background-color: #EF4444 !important; } /* Red */
+.bg-info { background-color: #3B82F6 !important; } /* Blue */
+
+/* ====== Animations ====== */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in-up {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* ====== Utilities ====== */
+.shadow-hover:hover {
+  box-shadow: var(--shadow-lg) !important;
+  transform: translateY(-2px);
+}

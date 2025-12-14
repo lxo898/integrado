@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+{% block title %}Crear Usuario · Reservas Inacap{% endblock %}
+
+{% block content %}
+<section class="p-4 rounded-4 mb-4 inacap-hero">
+  <h1 class="h3 m-0">Crear nuevo usuario</h1>
+  <div class="small text-white-50">Alta manual de usuarios con asignación de rol</div>
+</section>
+
+<div class="row justify-content-center">
+  <div class="col-12 col-md-8 col-lg-6">
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-body p-4">
+
+        <form method="post" novalidate>
+          {% csrf_token %}
+
+          {% if form.non_field_errors %}
+          <div class="alert alert-danger rounded-3">
+            {% for e in form.non_field_errors %}{{ e }}<br>{% endfor %}
+          </div>
+          {% endif %}
+
+          <div class="mb-3">
+            <label class="form-label">Correo institucional</label>
+            {{ form.email }}
+            {% if form.email.errors %}
+            <div class="text-danger small">{{ form.email.errors|striptags }}</div>
+            {% endif %}
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Nombre</label>
+              {{ form.first_name }}
+              {% if form.first_name.errors %}
+              <div class="text-danger small">{{ form.first_name.errors|striptags }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Apellido</label>
+              {{ form.last_name }}
+              {% if form.last_name.errors %}
+              <div class="text-danger small">{{ form.last_name.errors|striptags }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label fw-bold text-danger">Rol de usuario</label>
+            {{ form.rol }}
+            <div class="form-text">Define los permisos que tendrá este usuario en el sistema.</div>
+            {% if form.rol.errors %}
+            <div class="text-danger small">{{ form.rol.errors|striptags }}</div>
+            {% endif %}
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Área (Funcionarios)</label>
+              {{ form.area }}
+              <div class="form-text small">Indica el departamento o unidad.</div>
+              {% if form.area.errors %}
+              <div class="text-danger small">{{ form.area.errors|striptags }}</div>
+              {% endif %}
+            </div>
+            <div class="col-md-6 mb-3">
+              <label class="form-label">Carrera (Alumnos)</label>
+              {{ form.carrera }}
+              <div class="form-text small">Indica la carrera que cursa.</div>
+              {% if form.carrera.errors %}
+              <div class="text-danger small">{{ form.carrera.errors|striptags }}</div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Contraseña</label>
+            <div class="input-group">
+              {{ form.password }}
+              <button class="btn btn-outline-secondary" type="button" onclick="togglePassword(this)">
+                <i class="bi bi-eye"></i>
+              </button>
+            </div>
+            {% if form.password.errors %}
+            <div class="text-danger small">{{ form.password.errors|striptags }}</div>
+            {% endif %}
+          </div>
+
+          <div class="mb-4 form-check form-switch">
+            {{ form.is_active }}
+            <label class="form-check-label" for="{{ form.is_active.id_for_label }}">Usuario activo</label>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center">
+            <a href="{% url 'dashboard_admin' %}" class="btn btn-outline-secondary rounded-3">Cancelar</a>
+            <button type="submit" class="btn btn-primary rounded-3">
+              <i class="bi bi-person-plus-fill"></i> Crear usuario
+            </button>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function togglePassword(btn) {
+    const input = btn.previousElementSibling;
+    if (input.type === "password") {
+      input.type = "text";
+      btn.innerHTML = '<i class="bi bi-eye-slash"></i>';
+    } else {
+      input.type = "password";
+      btn.innerHTML = '<i class="bi bi-eye"></i>';
+    }
+  }
+</script>
+
+<style>
+  /* Estilo para el select de rol */
+  select[name="rol"] {
+    display: block;
+    width: 100%;
+    padding: .375rem 2.25rem .375rem .75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #212529;
+    background-color: #fff;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='m2 5 6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right .75rem center;
+    background-size: 16px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: .375rem;
+    appearance: none;
+  }
+
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] {
+    width: 100%;
+    padding: .375rem .75rem;
+    border: 1px solid #dee2e6;
+    border-radius: .375rem;
+  }
+</style>
+{% endblock %}

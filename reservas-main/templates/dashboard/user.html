@@ -1,0 +1,208 @@
+{% extends "base.html" %}
+{% block title %}Reservas · Mi Panel{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="mb-4 fade-in-up">
+  <div class="p-4 rounded-4 inacap-hero position-relative overflow-hidden">
+    <div class="position-relative z-1">
+      <h1 class="h3 fw-bold mb-1 text-white">Hola, {{ user.first_name|default:user.username }} ({{ user_role }})</h1>
+      <p class="fs-6 text-white text-opacity-75 mb-0">Bienvenido a tu panel de gestión de espacios.</p>
+    </div>
+    <i class="bi bi-grid-1x2 position-absolute top-50 end-0 translate-middle-y me-5 opacity-25"
+      style="font-size: 10rem;"></i>
+  </div>
+</div>
+
+<!-- Quick Actions Grid -->
+<div class="row g-4 mb-5 fade-in-up" style="animation-delay: 0.1s;">
+  <div class="col-12">
+    <h4 class="fw-bold text-secondary mb-3">Accesos Rápidos</h4>
+  </div>
+
+  {% if can_create_reservation %}
+  <div class="col-12 col-sm-6 col-lg-3">
+    <a href="{% url 'reservation_new' %}" class="text-decoration-none">
+      <div class="card glass-panel h-100 border-0 shadow-hover p-3 text-center">
+        <div class="card-body">
+          <div class="rounded-circle bg-danger bg-opacity-10 p-3 d-inline-block mb-3">
+            <i class="bi bi-plus-lg fs-3 text-brand"></i>
+          </div>
+          <h5 class="fw-bold text-dark">Nueva Reserva</h5>
+          <p class="text-muted small mb-0">Solicita un espacio</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endif %}
+
+  {% if can_see_history %}
+  <div class="col-12 col-sm-6 col-lg-3">
+    <a href="{% url 'history' %}" class="text-decoration-none">
+      <div class="card glass-panel h-100 border-0 shadow-hover p-3 text-center">
+        <div class="card-body">
+          <div class="rounded-circle bg-primary bg-opacity-10 p-3 d-inline-block mb-3">
+            <i class="bi bi-clock-history fs-3 text-primary"></i>
+          </div>
+          <h5 class="fw-bold text-dark">Historial</h5>
+          <p class="text-muted small mb-0">Tus movimientos</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endif %}
+
+  {% if can_see_calendar %}
+  <div class="col-12 col-sm-6 col-lg-3">
+    <a href="{% url 'calendar' %}" class="text-decoration-none">
+      <div class="card glass-panel h-100 border-0 shadow-hover p-3 text-center">
+        <div class="card-body">
+          <div class="rounded-circle bg-danger bg-opacity-10 p-3 d-inline-block mb-3">
+            <i class="bi bi-calendar3 fs-3 text-danger"></i>
+          </div>
+          <h5 class="fw-bold text-dark">Calendario</h5>
+          <p class="text-muted small mb-0">Disponibilidad</p>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endif %}
+
+  {% if can_see_notifications %}
+  <div class="col-12 col-sm-6 col-lg-3">
+    <a href="{% url 'notifications' %}" class="text-decoration-none">
+      <div class="card glass-panel h-100 border-0 shadow-hover p-3 text-center">
+        <div class="card-body">
+          <div class="rounded-circle bg-danger bg-opacity-10 p-3 d-inline-block mb-3">
+            <i class="bi bi-bell fs-3 text-danger"></i>
+          </div>
+          <h5 class="fw-bold text-dark">Notificaciones</h5>
+          <p class="text-muted small mb-0">
+            {% if unread %}<span class="badge bg-danger rounded-pill">{{ unread }} nuevas</span>{% else %}Sin
+            novedades{% endif %}
+          </p>
+        </div>
+      </div>
+    </a>
+  </div>
+  {% endif %}
+</div>
+
+<!-- Status Sections -->
+{% if my_pending or upcoming %}
+<div class="row g-4 fade-in-up" style="animation-delay: 0.2s;">
+
+  <!-- Upcoming -->
+  <div class="col-12 col-lg-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-0 pt-4 px-4">
+        <h5 class="fw-bold mb-0"><i class="bi bi-calendar-check me-2 text-success"></i>Próximas Reservas</h5>
+      </div>
+      <div class="card-body px-2">
+        <div class="list-group list-group-flush">
+          {% for r in upcoming %}
+          <div class="list-group-item border-0 px-4 py-3 d-flex align-items-center">
+            <div class="me-3 text-center">
+              <div class="fw-bold text-dark" style="font-size: 1.1rem;">{{ r.start|date:"d" }}</div>
+              <div class="small text-uppercase text-muted">{{ r.start|date:"M" }}</div>
+            </div>
+            <div class="flex-grow-1 border-start ps-3">
+              <h6 class="fw-bold mb-1">{{ r.space.name }}</h6>
+              <div class="small text-muted">
+                <i class="bi bi-clock me-1"></i>{{ r.start|date:"H:i" }} - {{ r.end|date:"H:i" }}
+              </div>
+            </div>
+            <span class="badge bg-success bg-opacity-10 text-success rounded-pill">Aprobada</span>
+          </div>
+          {% empty %}
+          <div class="text-center py-4 text-muted">
+            <i class="bi bi-calendar-x fs-1 d-block mb-2 opacity-25"></i>
+            No tienes reservas próximas
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending -->
+  <div class="col-12 col-lg-6">
+    <div class="card border-0 shadow-sm h-100">
+      <div class="card-header bg-white border-0 pt-4 px-4">
+        <h5 class="fw-bold mb-0"><i class="bi bi-hourglass-split me-2 text-danger"></i>Pendientes de Aprobación</h5>
+      </div>
+      <div class="card-body px-2">
+        <div class="list-group list-group-flush">
+          {% for r in my_pending %}
+          <div class="list-group-item border-0 px-4 py-3 d-flex align-items-center">
+            <div class="me-3">
+              <div class="rounded-circle bg-danger bg-opacity-10 p-2">
+                <i class="bi bi-clock text-danger"></i>
+              </div>
+            </div>
+            <div class="flex-grow-1">
+              <h6 class="fw-bold mb-1">{{ r.space.name }}</h6>
+              <div class="small text-muted">
+                {{ r.start|date:"d/m/Y" }} · {{ r.start|date:"H:i" }}
+              </div>
+            </div>
+            <span class="badge bg-warning bg-opacity-10 text-warning rounded-pill">Pendiente</span>
+          </div>
+          {% empty %}
+          <div class="text-center py-4 text-muted">
+            <i class="bi bi-check-circle fs-1 d-block mb-2 opacity-25"></i>
+            No tienes solicitudes pendientes
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endif %}
+
+<!-- Other Links (Spaces, Resources, etc) -->
+<div class="row g-4 mt-2 fade-in-up" style="animation-delay: 0.3s;">
+  {% if can_see_spaces %}
+  <div class="col-6 col-md-3">
+    <a href="{% url 'spaces_list' %}"
+      class="btn btn-outline-light text-dark w-100 py-3 border shadow-sm bg-white hover-lift">
+      <i class="bi bi-building d-block fs-4 mb-2 text-secondary"></i>
+      Espacios
+    </a>
+  </div>
+  {% endif %}
+
+  {% if can_see_resources %}
+  <div class="col-6 col-md-3">
+    <a href="{% url 'resources_list' %}"
+      class="btn btn-outline-light text-dark w-100 py-3 border shadow-sm bg-white hover-lift">
+      <i class="bi bi-tools d-block fs-4 mb-2 text-secondary"></i>
+      Recursos
+    </a>
+  </div>
+  {% endif %}
+
+  {% if can_export_reports %}
+  <div class="col-6 col-md-3">
+    <a href="{% url 'reports_view' %}"
+      class="btn btn-outline-light text-dark w-100 py-3 border shadow-sm bg-white hover-lift">
+      <i class="bi bi-filetype-csv d-block fs-4 mb-2 text-secondary"></i>
+      Reportes
+    </a>
+  </div>
+  {% endif %}
+
+  {% if can_see_statistics %}
+  <div class="col-6 col-md-3">
+    <a href="{% url 'dashboard_statistics' %}"
+      class="btn btn-outline-light text-dark w-100 py-3 border shadow-sm bg-white hover-lift">
+      <i class="bi bi-graph-up d-block fs-4 mb-2 text-secondary"></i>
+      Estadísticas
+    </a>
+  </div>
+  {% endif %}
+
+</div>
+{% endblock %}

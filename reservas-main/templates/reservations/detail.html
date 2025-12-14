@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+{% block title %}Detalle de reserva{% endblock %}
+{% block content %}
+
+<section class="p-4 rounded-4 mb-4 inacap-hero">
+  <h1 class="h3 m-0">🔍 Detalle de reserva</h1>
+</section>
+
+<div class="card shadow-sm border-0 rounded-4">
+  <div class="card-body">
+    <dl class="row mb-0">
+      <dt class="col-sm-3">Espacio</dt>
+      <dd class="col-sm-9">{{ object.space }}</dd>
+
+      <dt class="col-sm-3">Inicio</dt>
+      <dd class="col-sm-9">{{ object.start|date:"Y-m-d H:i" }}</dd>
+
+      <dt class="col-sm-3">Término</dt>
+      <dd class="col-sm-9">{{ object.end|date:"Y-m-d H:i" }}</dd>
+
+      <dt class="col-sm-3">Estado</dt>
+      <dd class="col-sm-9">
+        {% if object.status == "PEND" %}
+        <span class="badge rounded-pill text-bg-warning">Pendiente</span>
+        {% elif object.status == "APPR" %}
+        <span class="badge rounded-pill text-bg-success">Aprobada</span>
+        {% elif object.status == "REJ" %}
+        <span class="badge rounded-pill text-bg-danger">Rechazada</span>
+        {% elif object.status == "CANC" %}
+        <span class="badge rounded-pill text-bg-secondary">Cancelada</span>
+        {% else %}
+        <span class="badge text-bg-secondary">{{ object.get_status_display }}</span>
+        {% endif %}
+      </dd>
+
+      <dt class="col-sm-3">Propósito</dt>
+      <dd class="col-sm-9">{{ object.purpose|default:"—" }}</dd>
+
+      {% if approval %}
+      <dt class="col-sm-3">Decisión admin</dt>
+      <dd class="col-sm-9">{{ approval.get_decision_display }}</dd>
+
+      <dt class="col-sm-3">Notas del administrador</dt>
+      <dd class="col-sm-9">{{ approval.notes|default:"—" }}</dd>
+      {% endif %}
+    </dl>
+  </div>
+</div>
+
+<div class="mt-3 d-flex gap-2">
+  <a href="javascript:history.back()" class="btn btn-outline-secondary rounded-3">Volver</a>
+  {% if object.status == "PEND" or object.status == "APPR" %}
+  <a href="{% url 'history' %}#r{{ object.id }}" class="btn btn-outline-primary rounded-3">Ir a mi historial</a>
+  {% endif %}
+
+  {% if object.can_cancel %}
+  <button type="button" class="btn btn-outline-danger rounded-3 ms-auto" data-bs-toggle="modal"
+    data-bs-target="#cancelModal">
+    Cancelar Reserva
+  </button>
+  {% endif %}
+</div>
+
+<!-- Modal Cancelar -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="cancelModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content rounded-4 shadow">
+      <div class="modal-header border-bottom-0">
+        <h1 class="modal-title fs-5" id="cancelModalLabel">Cancelar reserva</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form method="post" action="{% url 'reservation_cancel' object.id %}">
+        {% csrf_token %}
+        <div class="modal-body py-0">
+          <p>¿Estás seguro de que deseas cancelar esta reserva?</p>
+          <div class="mb-3">
+            <label for="cancelReason" class="form-label">Motivo (opcional)</label>
+            <input type="text" class="form-control" name="reason" id="cancelReason" placeholder="Ej: Cambio de planes">
+          </div>
+        </div>
+        <div class="modal-footer border-top-0">
+          <button type="button" class="btn btn-secondary rounded-3" data-bs-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-danger rounded-3">Confirmar Cancelación</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
